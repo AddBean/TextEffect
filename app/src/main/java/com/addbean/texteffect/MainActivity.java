@@ -4,7 +4,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.addbean.effect.TextEffectView;
 
@@ -15,11 +14,23 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         final TextEffectView text = (TextEffectView) findViewById(R.id.text_view);
-        final EditText editText= (EditText) findViewById(R.id.edit_text);
         findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                text.startAnim(editText.getText().toString().trim());
+                text.startShow("微信\n Q Q",2000,12,13,false);
+                text.setOnDotLifeListener(new TextEffectView.OnDotLifeListener() {
+                    @Override
+                    public void onAnimFinish() {
+                        text.startShow("一网\n打尽",2000,20,10,false);
+                        text.setOnDotLifeListener(new TextEffectView.OnDotLifeListener() {
+                            @Override
+                            public void onAnimFinish() {
+//                                text.startShow(" ",2000,10,12,true);
+//                                text.setOnDotLifeListener(null);
+                            }
+                        });
+                    }
+                });
             }
         });
 

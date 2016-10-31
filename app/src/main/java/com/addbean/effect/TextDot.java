@@ -11,12 +11,22 @@ public class TextDot {
     private int mColor;
     private Point mLoc;
     private float mAlpha;
+    private int mState;
 
-    public TextDot(int mSize, int mColor, Point mLoc, float mAlpha) {
+    public int getmState() {
+        return mState;
+    }
+
+    public void setmState(int mState) {
+        this.mState = mState;
+    }
+
+    public TextDot(int mSize, int mColor, Point mLoc, float mAlpha,int mState) {
         this.mSize = mSize;
         this.mColor = mColor;
         this.mLoc = mLoc;
         this.mAlpha = mAlpha;
+        this.mState=mState;
     }
 
     public float getmAlpha() {
