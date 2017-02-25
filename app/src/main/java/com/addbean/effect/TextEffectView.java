@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Point;
 import android.graphics.RectF;
 import android.text.TextPaint;
@@ -54,6 +55,32 @@ public class TextEffectView extends View {
         mTragetRect = new RectF(0, 0, mLowBitmap.getWidth() * mScaleRate, mLowBitmap.getHeight() * mScaleRate);
         setCoordByBitmap(mLowBitmap);
         invalidate();
+    }
+
+    public void setBitmap(Bitmap bmp) {
+        mDotsPrePos.clear();
+        mLowBitmap = createLowResolutionBitmapByOrign(bmp);
+        mTragetRect = new RectF(0, 0, mLowBitmap.getWidth() * mScaleRate, mLowBitmap.getHeight() * mScaleRate);
+        setCoordByBitmap(mLowBitmap);
+        invalidate();
+    }
+
+    /**
+     * 创建低分辨率图片；
+     * @param bmp
+     * @return
+     */
+    private Bitmap createLowResolutionBitmapByOrign(Bitmap bmp) {
+        if (bmp == null) return null;
+        // 缩放图片的尺寸
+        float scaleWidth = mMinHeight/(float) bmp.getHeight();
+        float scaleHeight =  mMinHeight/ (float)bmp.getHeight();
+        float width=scaleWidth*bmp.getWidth();
+        Matrix matrix = new Matrix();
+        matrix.postScale(scaleWidth, scaleHeight);
+        // 产生缩放后的Bitmap对象
+        Bitmap resizeBitmap = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, false);
+        return resizeBitmap;
     }
 
     /**
@@ -143,6 +170,29 @@ public class TextEffectView extends View {
     }
 
     ValueAnimator mAnim = null;
+
+    public void startShow(Bitmap bmp, int durTime, float scaleRate, int resole, boolean isShowColor) {
+        mScaleRate = scaleRate;
+        mMinHeight = resole;
+        mIsShowColor = isShowColor;
+        setBitmap(bmp);
+        if (mAnim != null) mAnim.cancel();
+        mAnim = ValueAnimator.ofFloat(0f, 1f);
+        mAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float value = (float) animation.getAnimatedValue();
+                evolveDots(value);
+                invalidate();
+                if (value == 1f && mOnDotLifeListener != null)
+                    mOnDotLifeListener.onAnimFinish();
+            }
+        });
+        //设置插值器
+        mAnim.setInterpolator(new DecelerateInterpolator());
+        mAnim.setDuration(durTime);
+        mAnim.start();
+    }
 
     public void startShow(String text, int durTime, float scaleRate, int resole, boolean isShowColor) {
         mScaleRate = scaleRate;

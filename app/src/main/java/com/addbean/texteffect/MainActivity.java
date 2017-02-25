@@ -1,5 +1,7 @@
 package com.addbean.texteffect;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -17,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                text.startShow("微信\n Q Q",2000,12,13,false);
+                text.startShow("微信\n Q Q",2000,16,10,false);
                 text.setOnDotLifeListener(new TextEffectView.OnDotLifeListener() {
                     @Override
                     public void onAnimFinish() {
@@ -31,6 +33,12 @@ public class MainActivity extends AppCompatActivity {
                         });
                     }
                 });
+            }
+        });
+        findViewById(R.id.button2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                text.startShow(BitmapFactory.decodeResource(getResources(),R.mipmap.ic_launcher),2000,10,16,true);
             }
         });
 
